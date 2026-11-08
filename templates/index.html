@@ -39,7 +39,17 @@
             <div>
                 <h1>MediSense AI</h1>
                 <span style="color: var(--subtext); font-size: 14px;">Preventive Healthcare & Health Risk Intelligence Platform</span>
-            <form method="POST">
+            </div>
+            <div class="top-btns no-print">
+                <button onclick="document.body.classList.toggle('light-mode')">Toggle Dark/Light Mode</button>
+                <button onclick="window.print()">Download PDF Report</button>
+            </div>
+        </header>
+
+        <div class="grid">
+            <div class="card no-print">
+                <h3>Patient Biomarkers</h3>
+                <form method="POST">
                     <label>Patient Name</label>
                     <input type="text" name="patient_name" required placeholder="Enter patient name" value="{{ request.form.get('patient_name', '') }}">
 
@@ -57,17 +67,6 @@
 
                     <label>Average Sleep (Hours/Night)</label>
                     <input type="number" step="any" name="sleep" required placeholder="e.g. 7.5" value="{{ request.form.get('sleep', '') }}">
-
-                    <label>Physical Activity</label>
-                    <select name="activity">
-                        <option value="0" {% if request.form.get('activity') == '0' %}selected{% endif %}>Low (0-1 days/week)</option>
-                        <option value="1" {% if request.form.get('activity') == '1' %}selected{% endif %}>Active (3+ days/week)</option>
-                    </select>
-
-                    <button type="submit">Run Health Assessment</button>
-                </form>
-                    <label>Average Sleep (Hours/Night)</label>
-                    <input type="number" step="any" name="sleep" required placeholder="e.g. 7.5" value="{{ request.form.get('sleep', '5.5') }}">
 
                     <label>Physical Activity</label>
                     <select name="activity">
@@ -180,7 +179,7 @@
                 {% endif %}
 
                 <div class="card">
-                    <h3>Health Digital Twin — Longitudinal Timeline ({{ patient_name }})</h3>
+                    <h3>Health Digital Twin — Longitudinal Timeline {% if request.form.get('patient_name') %}({{ request.form.get('patient_name') }}){% endif %}</h3>
                     <div id="timelineChart" style="height: 240px;"></div>
                 </div>
 
