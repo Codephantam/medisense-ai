@@ -39,32 +39,33 @@
             <div>
                 <h1>MediSense AI</h1>
                 <span style="color: var(--subtext); font-size: 14px;">Preventive Healthcare & Health Risk Intelligence Platform</span>
-            </div>
-            <div class="top-btns no-print">
-                <button onclick="document.body.classList.toggle('light-mode')">Toggle Dark/Light Mode</button>
-                <button onclick="window.print()">Download PDF Report</button>
-            </div>
-        </header>
-
-        <div class="grid">
-            <div class="card no-print">
-                <h3>Patient Biomarkers</h3>
-                <form method="POST">
+            <form method="POST">
                     <label>Patient Name</label>
-                    <input type="text" name="patient_name" required value="{{ patient_name }}">
+                    <input type="text" name="patient_name" required placeholder="Enter patient name" value="{{ request.form.get('patient_name', '') }}">
 
                     <label>Age (Years)</label>
-                    <input type="number" name="age" min="1" max="120" required placeholder="e.g. 25" value="{{ request.form.get('age', '45') }}">
+                    <input type="number" name="age" min="1" max="120" required placeholder="e.g. 25" value="{{ request.form.get('age', '') }}">
 
                     <label>BMI (Body Mass Index)</label>
-                    <input type="number" step="any" name="bmi" required placeholder="e.g. 22.5" value="{{ request.form.get('bmi', '31.0') }}">
+                    <input type="number" step="any" name="bmi" required placeholder="e.g. 22.5" value="{{ request.form.get('bmi', '') }}">
 
                     <label>Systolic Blood Pressure (mmHg)</label>
-                    <input type="number" step="any" name="bp" required placeholder="e.g. 120" value="{{ request.form.get('bp', '142') }}">
+                    <input type="number" step="any" name="bp" required placeholder="e.g. 120" value="{{ request.form.get('bp', '') }}">
 
                     <label>Fasting Glucose (mg/dL)</label>
-                    <input type="number" step="any" name="glucose" required placeholder="e.g. 95" value="{{ request.form.get('glucose', '155') }}">
+                    <input type="number" step="any" name="glucose" required placeholder="e.g. 95" value="{{ request.form.get('glucose', '') }}">
 
+                    <label>Average Sleep (Hours/Night)</label>
+                    <input type="number" step="any" name="sleep" required placeholder="e.g. 7.5" value="{{ request.form.get('sleep', '') }}">
+
+                    <label>Physical Activity</label>
+                    <select name="activity">
+                        <option value="0" {% if request.form.get('activity') == '0' %}selected{% endif %}>Low (0-1 days/week)</option>
+                        <option value="1" {% if request.form.get('activity') == '1' %}selected{% endif %}>Active (3+ days/week)</option>
+                    </select>
+
+                    <button type="submit">Run Health Assessment</button>
+                </form>
                     <label>Average Sleep (Hours/Night)</label>
                     <input type="number" step="any" name="sleep" required placeholder="e.g. 7.5" value="{{ request.form.get('sleep', '5.5') }}">
 
