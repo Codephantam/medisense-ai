@@ -1,0 +1,20 @@
+=== MEDISENSE AI: ADVANCED MULTI-MODEL BENCHMARK REPORT ===
+
+
+--- Target: DIABETES ---
+  Logistic Regression  | Acc: 82.50% | F1: 0.708 | Test AUC: 0.883 | 5-Fold CV AUC: 0.905
+  Random Forest        | Acc: 83.00% | F1: 0.705 | Test AUC: 0.874 | 5-Fold CV AUC: 0.892
+  Gradient Boosting    | Acc: 82.00% | F1: 0.700 | Test AUC: 0.866 | 5-Fold CV AUC: 0.886
+  --> Selected Production Model: Logistic Regression (ROC-AUC: 0.883)
+
+--- Target: HEART ---
+  Logistic Regression  | Acc: 78.00% | F1: 0.649 | Test AUC: 0.857 | 5-Fold CV AUC: 0.876
+  Random Forest        | Acc: 78.00% | F1: 0.633 | Test AUC: 0.842 | 5-Fold CV AUC: 0.858
+  Gradient Boosting    | Acc: 77.83% | F1: 0.645 | Test AUC: 0.844 | 5-Fold CV AUC: 0.849
+  --> Selected Production Model: Logistic Regression (ROC-AUC: 0.857)
+
+--- Target: KIDNEY ---
+  Logistic Regression  | Acc: 86.50% | F1: 0.643 | Test AUC: 0.903 | 5-Fold CV AUC: 0.891
+  Random Forest        | Acc: 86.33% | F1: 0.624 | Test AUC: 0.890 | 5-Fold CV AUC: 0.878
+  Gradient Boosting    | Acc: 85.83% | F1: 0.622 | Test AUC: 0.881 | 5-Fold CV AUC: 0.876
+  --> Selected Production Model: Logistic Regression (ROC-AUC: 0.903)

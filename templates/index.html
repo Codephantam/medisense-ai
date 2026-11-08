@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MediSense AI — Level 3 Intelligence Platform</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        :root {
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --subtext: #94a3b8; --border: #334155; --input: #0f172a;
+        }
+        body.light-mode {
+            --bg: #f1f5f9; --card: #ffffff; --text: #0f172a; --subtext: #475569; --border: #cbd5e1; --input: #f8fafc;
+        }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+        body { background: var(--bg); color: var(--text); margin: 0; padding: 24px; transition: 0.2s; }
+        .container { max-width: 1220px; margin: 0 auto; }
+        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 14px; margin-bottom: 24px; }
+        header h1 { margin: 0; color: #0284c7; font-size: 26px; }
+        .top-btns button { width: auto; margin: 0 0 0 10px; padding: 8px 14px; font-size: 13px; background: var(--card); color: var(--text); border: 1px solid var(--border); }
+        .grid { display: grid; grid-template-columns: 330px 1fr; gap: 24px; }
+        .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
+        h2, h3 { margin-top: 0; }
+        label { display: block; margin-top: 10px; font-size: 13px; color: var(--subtext); }
+        input, select { width: 100%; padding: 9px; margin-top: 4px; border-radius: 6px; border: 1px solid var(--border); background: var(--input); color: var(--text); }
+        button { width: 100%; margin-top: 18px; padding: 12px; background: #0284c7; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        button:hover { opacity: 0.9; }
+        .risk-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+        .metric-box { background: var(--input); padding: 14px; border-radius: 10px; border: 1px solid var(--border); text-align: center; }
+        .metric-val { font-size: 24px; font-weight: bold; margin-top: 6px; }
+        .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .slider-row { margin-bottom: 12px; }
+        .slider-row span { float: right; font-weight: bold; color: #38bdf8; }
+        @media print { .no-print { display: none !important; } .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>MediSense AI</h1>
+                <span style="color: var(--subtext); font-size: 14px;">Preventive Healthcare & Health Risk Intelligence Platform</span>
+            </div>
+            <div class="top-btns no-print">
+                <button onclick="document.body.classList.toggle('light-mode')">Toggle Dark/Light Mode</button>
+                <button onclick="window.print()">Download PDF Report</button>
+            </div>
+        </header>
+
+        <div class="grid">
+            <div class="card no-print">
+                <h3>Patient Biomarkers</h3>
+                <form method="POST">
+                    <label>Patient Name</label>
+                    <input type="text" name="patient_name" required value="{{ patient_name }}">
+
+                    <label>Age (Years)</label>
+                    <input type="number" name="age" min="1" max="120" required placeholder="e.g. 25" value="{{ request.form.get('age', '45') }}">
+
+                    <label>BMI (Body Mass Index)</label>
+                    <input type="number" step="any" name="bmi" required placeholder="e.g. 22.5" value="{{ request.form.get('bmi', '31.0') }}">
+
+                    <label>Systolic Blood Pressure (mmHg)</label>
+                    <input type="number" step="any" name="bp" required placeholder="e.g. 120" value="{{ request.form.get('bp', '142') }}">
+
+                    <label>Fasting Glucose (mg/dL)</label>
+                    <input type="number" step="any" name="glucose" required placeholder="e.g. 95" value="{{ request.form.get('glucose', '155') }}">
+
+                    <label>Average Sleep (Hours/Night)</label>
+                    <input type="number" step="any" name="sleep" required placeholder="e.g. 7.5" value="{{ request.form.get('sleep', '5.5') }}">
+
+                    <label>Physical Activity</label>
+                    <select name="activity">
+                        <option value="0" {% if request.form.get('activity') == '0' %}selected{% endif %}>Low (0-1 days/week)</option>
+                        <option value="1" {% if request.form.get('activity') == '1' %}selected{% endif %}>Active (3+ days/week)</option>
+                    </select>
+
+                    <button type="submit">Run Health Assessment</button>
+                </form>
+            </div>
+
+            <div>
+                {% if result %}
+                <div class="risk-grid">
+                    <div class="metric-box">
+                        <div style="font-size: 12px; color: var(--subtext);">HEALTH SCORE</div>
+                        <div class="metric-val" style="color: #38bdf8;">{{ result.health_score }}/100</div>
+                    </div>
+                    <div class="metric-box">
+                        <div style="font-size: 12px; color: var(--subtext);">DIABETES RISK</div>
+                        <div class="metric-val" style="color: #f87171;">{{ result.diabetes_risk }}%</div>
+                    </div>
+                    <div class="metric-box">
+                        <div style="font-size: 12px; color: var(--subtext);">HEART RISK</div>
+                        <div class="metric-val" style="color: #fbbf24;">{{ result.heart_risk }}%</div>
+                    </div>
+                    <div class="metric-box">
+                        <div style="font-size: 12px; color: var(--subtext);">KIDNEY RISK</div>
+                        <div class="metric-val" style="color: #a78bfa;">{{ result.kidney_risk }}%</div>
+                    </div>
+                </div>
+
+                <div class="charts-row">
+                    <div class="card">
+                        <h3>Explainable AI (Feature Impact)</h3>
+                        <div id="xaiChart" style="height: 250px;"></div>
+                    </div>
+
+                    <div class="card no-print">
+                        <h3>Interactive "What-If" Simulator</h3>
+                        <div class="slider-row">
+                            <label>Target BMI <span id="valBmi">{{ result.bmi }}</span></label>
+                            <input type="range" id="simBmi" min="18" max="40" step="0.5" value="{{ result.bmi }}" oninput="runSim()">
+                        </div>
+                        <div class="slider-row">
+                            <label>Target Glucose (mg/dL) <span id="valGlu">{{ result.glucose }}</span></label>
+                            <input type="range" id="simGlu" min="75" max="200" step="1" value="{{ result.glucose }}" oninput="runSim()">
+                        </div>
+                        <div class="slider-row">
+                            <label>Target Sleep (Hours) <span id="valSlp">{{ result.sleep }}</span></label>
+                            <input type="range" id="simSlp" min="4" max="9" step="0.5" value="{{ result.sleep }}" oninput="runSim()">
+                        </div>
+                        <div class="slider-row">
+                            <label>Physical Activity</label>
+                            <select id="simAct" onchange="runSim()">
+                                <option value="0" {% if result.activity == 0 %}selected{% endif %}>Low (0-1 days/week)</option>
+                                <option value="1" {% if result.activity == 1 %}selected{% endif %}>Active (3+ days/week)</option>
+                            </select>
+                        </div>
+                        <div style="background: var(--input); padding: 12px; border-radius: 8px; margin-top: 12px; font-size: 14px;">
+                            <strong>Simulated Score:</strong> <span id="simScore" style="color:#22c55e; font-weight:bold; font-size:18px;">{{ result.health_score }}/100</span><br>
+                            Diabetes: <strong id="simDia">{{ result.diabetes_risk }}%</strong> | Heart: <strong id="simHrt">{{ result.heart_risk }}%</strong> | Kidney: <strong id="simKid">{{ result.kidney_risk }}%</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    Plotly.newPlot('xaiChart', [{
+                        type: 'bar',
+                        orientation: 'h',
+                        x: JSON.parse('{{ result.impacts.values() | list | tojson | safe }}'),
+                        y: JSON.parse('{{ result.impacts.keys() | list | tojson | safe }}'),
+                        marker: { color: '#38bdf8' }
+                    }], {
+                        margin: { t: 10, b: 30, l: 100, r: 10 },
+                        paper_bgcolor: 'rgba(0,0,0,0)',
+                        plot_bgcolor: 'rgba(0,0,0,0)',
+                        font: { color: '#94a3b8' }
+                    }, {displayModeBar: false});
+
+                    async function runSim() {
+                        const bmi = document.getElementById('simBmi').value;
+                        const glucose = document.getElementById('simGlu').value;
+                        const sleep = document.getElementById('simSlp').value;
+                        const activity = document.getElementById('simAct').value;
+
+                        document.getElementById('valBmi').innerText = bmi;
+                        document.getElementById('valGlu').innerText = glucose;
+                        document.getElementById('valSlp').innerText = sleep;
+
+                        const res = await fetch('/simulate', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                age: "{{ result.age }}",
+                                bp: "{{ result.bp }}",
+                                bmi: bmi,
+                                glucose: glucose,
+                                sleep: sleep,
+                                activity: activity
+                            })
+                        });
+                        const data = await res.json();
+                        document.getElementById('simScore').innerText = data.health_score + '/100';
+                        document.getElementById('simDia').innerText = data.diabetes_risk + '%';
+                        document.getElementById('simHrt').innerText = data.heart_risk + '%';
+                        document.getElementById('simKid').innerText = data.kidney_risk + '%';
+                    }
+                </script>
+                {% endif %}
+
+                <div class="card">
+                    <h3>Health Digital Twin — Longitudinal Timeline ({{ patient_name }})</h3>
+                    <div id="timelineChart" style="height: 240px;"></div>
+                </div>
+
+                <script>
+                    const historyData = JSON.parse('{{ history | tojson | safe }}');
+                    if (historyData.length > 0) {
+                        Plotly.newPlot('timelineChart', [
+                            { x: historyData.map(d => d[0]), y: historyData.map(d => d[1]), name: 'Health Score', mode: 'lines+markers', line: {color: '#38bdf8', width: 3} },
+                            { x: historyData.map(d => d[0]), y: historyData.map(d => d[2]), name: 'Diabetes Risk %', mode: 'lines+markers', line: {color: '#f87171', dash: 'dot'} }
+                        ], {
+                            margin: { t: 10, b: 30, l: 40, r: 10 },
+                            paper_bgcolor: 'rgba(0,0,0,0)',
+                            plot_bgcolor: 'rgba(0,0,0,0)',
+                            font: { color: '#94a3b8' },
+                            legend: { orientation: 'h', y: 1.15 }
+                        }, {displayModeBar: false});
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
